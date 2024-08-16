@@ -1,2 +1,2 @@
 # DecomposeWHAR
-The code for AAAI 2025 paper "Decomposing and Fusing Intra- and Inter-Sensor Spatio-Temporal Signal for Multi-Sensor Wearable Human Activity Recognition".
+The official code for the AAAI 2025 submission, titled "Decomposing and Fusing Intra- and Inter-Sensor Spatio-Temporal Signals for Multi-Sensor Wearable Human Activity Recognition."
