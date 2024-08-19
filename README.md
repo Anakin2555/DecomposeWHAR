@@ -3,7 +3,20 @@ The official code for the AAAI 2025 submission, titled "Decomposing and Fusing I
 
 ## Directory Structure
 
-- **Dataset/**: Contains scripts and data for preprocessing and handling datasets used in training and testing the models.
+- **Dataset/**: Contains scripts and data for preprocessing and handling datasets used in training and testing the models. Put the preprocessed data into the following directory structure:
+ - Dataset/
+ - opp/
+   - opp_24_12/
+   - opp_60_30/
+      ... # preprocessed data of Opportunity
+ - realdisp/
+   - realdisp_40_20/
+   - realdisp_100_50/
+      ... # preprocessed data of Realdisp
+ - skoda/
+   - skoda_right_78_39/
+   - skoda_right_196_98/
+      ... # preprocessed data of Skoda
   
 - **layers/**: Includes the core layer implementations used in our model.
 
@@ -16,6 +29,13 @@ The official code for the AAAI 2025 submission, titled "Decomposing and Fusing I
 - **modules.py**: Defines the main modules of our model.
 
 - **utils_this.py**: Additional utility functions.
+
+## Prerequisites
+- Python: >= 3.8
+- Pytorch: >= 2.2.0 + cu118
+- Mamba-ssm: 1.2.0
+- Causal-conv1d: 1.2.0
+
 
 ## Getting Started
 
