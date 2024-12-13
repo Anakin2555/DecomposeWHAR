@@ -3,4 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="xhy_dev" />
   </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="xhy_dev" project-jdk-type="Python SDK" />
 </project>

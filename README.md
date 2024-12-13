@@ -1,7 +1,7 @@
 # DecomposeWHAR
-The official code for the AAAI 2025 paper😍, titled "Decomposing and Fusing Intra- and Inter-Sensor Spatio-Temporal Signals for Multi-Sensor Wearable Human Activity Recognition."
+The official code for the AAAI 2025😍 paper, titled "Decomposing and Fusing Intra- and Inter-Sensor Spatio-Temporal Signals for Multi-Sensor Wearable Human Activity Recognition."
 
-# Model Overview
+## 🗺️ Model Overview
 ![](model.png)
 
 
@@ -9,20 +9,20 @@ The official code for the AAAI 2025 paper😍, titled "Decomposing and Fusing In
 
 
 
-## Prerequisites
+## ⚒️ Prerequisites
 - Python: >= 3.8
 - Pytorch: >= 2.2.0 + cu118
 - Mamba-ssm: 1.2.0
 - Causal-conv1d: 1.2.0
 
 
-## Getting Started
+## 🔛 Getting Started
 
 1. **Setup**: Ensure that all required dependencies are installed.
 2. **Download Dataset**: Download the preprocessed data from the website in the `download.txt` and put the files into the directory structure below.
 2. **Run the model**: Execute the `main.py` script to start training or evaluating the model.
 
-## Directory Structure
+## 📇 Directory Structure
 
 - **`Dataset`/**: Contains scripts and data for preprocessing and handling datasets used in training and testing the models. Put the preprocessed data into the following directory structure:
   - `opp`/
@@ -51,10 +51,15 @@ The official code for the AAAI 2025 paper😍, titled "Decomposing and Fusing In
 - **`utils_this.py`**: Additional utility functions.
 
 
-# Acknowledgements
-Our work is inspired by the following papers with their opensourced codes:
 
+## 🫰 Acknowledgements
+Our work is inspired by the following papers and their open-source codes. We sincerely thank the authors of these works for their contributions.
 1. DynamicWHAR: https://github.com/wdkhuans/DynamicWHAR
 2. ModernTCN: https://github.com/luodhhh/ModernTCN
 3. SST: https://github.com/XiongxiaoXu/SST
 4. HARMamba: https://arxiv.org/abs/2403.20183
+5. Time-Series-Library: https://github.com/thuml/Time-Series-Library
+
+
+## 👍 Extension  
+We have experimented with several recent advanced time series classification methods, including TimesNet and various Transformer variants. The code for these methods is stored in the `layers` and `models_layers` directories. For those interested in exploring state-of-the-art models for WHAR, these implementations provide a solid foundation for further improvements.
