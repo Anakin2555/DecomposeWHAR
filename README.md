@@ -63,3 +63,4 @@ Our work is inspired by the following papers and their open-source codes. We sin
 
 ## 👍 Extension  
 We have experimented with several recent advanced time series classification methods, including TimesNet and various Transformer variants. The code for these methods is stored in the `layers` and `models_layers` directories. For those interested in exploring state-of-the-art models for WHAR, these implementations provide a solid foundation for further improvements.
+Additionally, employing data augmentation techniques such as "Mixup" and strategies like "Center Loss" can be beneficial in mitigating overfitting and enhancing recognition accuracy.
