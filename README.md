@@ -9,7 +9,7 @@ The official code for the AAAI 2025😍 paper, titled "Decomposing and Fusing In
 ## 📄 Experiment Results
 ![](results.png)
 ❗Note: The experiment condition may not be the same as the baseline model "DynamicWHAR" because we aim to find the most suitable settings for our model to demonstrate the best performance.
-Additionally, we can't reproduce the results in the experiment settings based on their codes.
+Additionally, we can't reproduce the results of their paper in the experiment settings based on their codes, so we just quote results of "DynamicWHAR" and previous models in their paper.
 
 
 ## ⚒️ Prerequisites
@@ -23,7 +23,7 @@ Additionally, we can't reproduce the results in the experiment settings based on
 
 1. **Setup**: Ensure that all required dependencies are installed.
 2. **Download Dataset**: Download the preprocessed data from the website in the `download.txt` and put the files into the directory structure below.
-2. **Run the model**: Execute the `main.py` script to start training or evaluating the model.
+2. **Run the model**: Modify the args and execute the `main.py` script to start training or evaluating the model.
 
 ## 📇 Directory Structure
 
@@ -57,13 +57,13 @@ Additionally, we can't reproduce the results in the experiment settings based on
 
 ## 🫰 Acknowledgements
 Our work is inspired by the following papers and their open-source codes. We sincerely thank the authors of these works for their contributions.
-1. DynamicWHAR: https://github.com/wdkhuans/DynamicWHAR
-2. ModernTCN: https://github.com/luodhhh/ModernTCN
-3. SST: https://github.com/XiongxiaoXu/SST
-4. HARMamba: https://arxiv.org/abs/2403.20183
-5. Time-Series-Library: https://github.com/thuml/Time-Series-Library
+- **DynamicWHAR**: https://github.com/wdkhuans/DynamicWHAR
+- **ModernTCN**: https://github.com/luodhhh/ModernTCN
+- **SST**: https://github.com/XiongxiaoXu/SST
+- **HARMamba**: https://arxiv.org/abs/2403.20183
+- **Time-Series-Library**: https://github.com/thuml/Time-Series-Library
 
 
 ## 👍 Extension  
-We have experimented with several recent advanced time series classification methods, including TimesNet and various Transformer variants. The code for these methods is stored in the `layers` and `models_layers` directories. For those interested in exploring state-of-the-art models for WHAR, these implementations provide a solid foundation for further improvements.
-Additionally, employing data augmentation techniques such as "Mixup" and strategies like "Center Loss" can be beneficial in mitigating overfitting and enhancing recognition accuracy.
+- **Other Model Layers**: We have experimented with several recent advanced time series classification methods, including TimesNet and various Transformer variants. The code for these methods is stored in the `layers` and `models_layers` directories. For those interested in exploring state-of-the-art models for WHAR, these implementations provide a solid foundation for further improvements.
+- **Data Augmentation**: Additionally, employing data augmentation techniques such as "Mixup" and strategies like "Center Loss" can be beneficial in mitigating overfitting and enhancing recognition accuracy.
