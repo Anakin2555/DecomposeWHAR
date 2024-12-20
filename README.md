@@ -6,7 +6,10 @@ The official code for the AAAI 2025😍 paper, titled "Decomposing and Fusing In
 
 
 
-
+## 📄 Experiment Results
+![](results.png)
+❗Note: The experiment condition may not be the same as the baseline model "DynamicWHAR" because we aim to find the most suitable settings for our model to demonstrate the best performance.
+Additionally, we can't reproduce the results in the experiment settings based on their codes.
 
 
 ## ⚒️ Prerequisites
