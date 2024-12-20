@@ -54,6 +54,13 @@ args.cuda = not args.no_cuda and torch.cuda.is_available()
 
 print(torch.cuda.is_available())
 
+
+
+args.num_tcn_layer = 2
+args.num_a_layers = 1
+args.num_m_layers = 1
+
+
 # Set model hyperparameters based on the dataset
 if args.dataset == "opp_24_12":
     args.window_size = 24
@@ -236,17 +243,22 @@ if args.cuda:
 
 
 # Function for training the model
-def train(model, train_loader, test_loader, optimizer, scheduler, epoch, adjacent_matrix):
+def train(model, train_loader, test_loader, optimizer, scheduler, epoch):
     model.train()
     all_features = []
     all_labels = []
     loss_train = []
+
+
+    t = time.time()
 
     if args.cuda:
         criterion = nn.CrossEntropyLoss().cuda()
     else:
         criterion = nn.CrossEntropyLoss()
 
+
+    # Train Phase
     for batch_idx, (data, label) in enumerate(train_loader):
         if data.shape[0] == 1:
             continue
@@ -290,7 +302,8 @@ def train(model, train_loader, test_loader, optimizer, scheduler, epoch, adjacen
 
     scheduler.step()
 
-    # Validation phase
+
+    # Test Phase
     correct1 = 0
     size = 0
     predicts = []
@@ -327,7 +340,11 @@ def train(model, train_loader, test_loader, optimizer, scheduler, epoch, adjacen
           f'time: {time.time() - t:.4f}s')
 
     return metrics.f1_score(labelss, predicts,
-                            average='macro'), 1. * correct1.float() / size, all_features, all_labels, out_attention
+                            average='macro'), 1. * correct1.float() / size, all_features, all_labels
+
+
+
+
 
 
 # Initialize model based on configuration
@@ -341,7 +358,9 @@ def init_model():
                               S=args.S,
                               kernel_size=args.kernel_size_tcn,
                               r=1,
-                              num_layers=2,
+                              num_layers=args.num_tcn_layer,
+                              num_m_layers=args.num_m_layers,
+                              num_a_layers=args.num_a_layers,
                               num_classes=args.class_num)
 
     if args.cuda:
@@ -371,14 +390,14 @@ def main(test_user):
 
     # Training loop
     for epoch in range(args.epochs):
-        f1_test, acc_test, all_features, all_labels, output_attention = train(model, train_loader, test_loader,
-                                                                              optimizer, scheduler, epoch, None)
+        f1_test, acc_test, all_features, all_labels = train(model, train_loader, test_loader,
+                                                                              optimizer, scheduler, epoch)
 
         if f1_test > best_f1:
             best_f1 = f1_test
             best_acc = acc_test.item()
 
-    print(f"------------------------------------------Best epoch:  Acc is {best_acc}, f1 is {best_f1}")
+    print(f"------------------------------------------Best Epoch of Test User {test_user}  :  Acc is {best_acc}, f1 is {best_f1}")
 
     # Record experiment results to a CSV file
     with open('record.csv', mode='a', newline='', encoding='utf-8') as file:

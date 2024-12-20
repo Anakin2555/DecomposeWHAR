@@ -30,6 +30,8 @@ class DecomposeWHAR(nn.Module):
                  kernel_size=5,  # Kernel size for convolutional layers
                  r=1,  # A hyperparameter for decomposition (e.g., reduction ratio)
                  num_layers=2,  # Number of decomposition layers
+                 num_m_layers=1,   # Number of mamba layers
+                 num_a_layers=1,   # Number of attention layers
                  num_classes=17):  # Number of classes for classification
         super(DecomposeWHAR, self).__init__()
         self.num_layers = num_layers
