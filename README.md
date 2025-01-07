@@ -16,7 +16,7 @@ Additionally, we can't reproduce the results of their paper in the experiment se
 
 ### Results of Unified Experimental Settings (See details in our paper)
 
-|                                                  | Opportunity (Accuracy / F1) | Realdisp (Accuracy / F1) | Skoda (Accuracy / F1) |
+|                                                  | Opportunity <br/>(Accuracy / F1) | Realdisp <br/>(Accuracy / F1) | Skoda <br/>(Accuracy / F1) |
 |--------------------------------------------------|-----------------------------|--------------------------|-----------------------|
 | **DecomposeWHAR👍**                              | **78.28%** / **72.02%**     | **96.64% / 96.10%**      | **97.61% / 97.20%**   |
 | DynamicWHAR                                      | 77.20% / 70.23%             | 92.85% / 92.15%          | 94.14% / 92.14%       |
