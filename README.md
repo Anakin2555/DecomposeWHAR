@@ -7,9 +7,23 @@ The official code for the AAAI 2025😍 paper, titled "Decomposing and Fusing In
 
 
 ## 📄 Experiment Results
+
 ![](results.png)
+
 ❗Note: The experiment condition may not be the same as the baseline model "DynamicWHAR" because we aim to find the most suitable settings for our model to demonstrate the best performance.
 Additionally, we can't reproduce the results of their paper in the experiment settings based on their codes, so we just quote results of "DynamicWHAR" and previous models in their paper.
+
+
+### Results of Unified Experimental Settings (See details in our paper)
+
+|                                                  | Opportunity (Accuracy / F1) | Realdisp (Accuracy / F1) | Skoda (Accuracy / F1) |
+|--------------------------------------------------|-----------------------------|--------------------------|-----------------------|
+| **DecomposeWHAR👍**                              | **78.28%** / **72.02%**     | **96.64% / 96.10%**      | **97.61% / 97.20%**   |
+| DynamicWHAR                                      | 77.20% / 70.23%             | 92.85% / 92.15%          | 94.14% / 92.14%       |
+| Attend and Dis. (w/o center loss, w/o mixup)     | 69.84% / 63.25%             | 94.41% / 93.57%          | 85.76% / 83.68%       |
+| Attend and Dis. (w center loss 0.3, w mixup 0.4) | 73.99% / 67.36%             | 91.56% / 91.36%          | 84.37% / 82.34%       |
+| Attend and Dis. (w center loss 0.3, w mixup 0.8) | 74.79% / 67.58%             | 90.51% / 90.05%          | 82.43% / 79.31%       |
+| DeepConvLSTM                                     | 66.67% / 60.52%             | 93.37% / 93.24%          | 85.96% / 83.34%       |
 
 
 ## ⚒️ Prerequisites
