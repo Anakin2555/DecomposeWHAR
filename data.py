@@ -11,7 +11,7 @@ class Opportunity( object ):
             self._length = 60             
             
         self.name               = name
-        self._path              = 'Dataset/opp/'
+        self._path              = '../DynamicWHAR/Dataset/opp/'
         self._channel_num       = 113
         self._user_num          = 4
         self._act_num           = 17
@@ -47,7 +47,7 @@ class Realworld( object ):
             self._length = 100  
             
         self.name               = name
-        self._path              = 'Dataset/realworld/'
+        self._path              = '../DynamicWHAR/Dataset/realworld/'
         self._channel_num       = 63
         self._user_num          = 13
         self._act_num           = 8    
@@ -83,7 +83,7 @@ class Realdisp( object ):
             self._length = 100        
             
         self.name               = name
-        self._path              = 'Dataset/realdisp/'
+        self._path              = '../DynamicWHAR/Dataset/realdisp/'
         self._channel_num       = 117
         self._user_num          = 10
         self._act_num           = 33        
@@ -119,7 +119,7 @@ class Skoda( object ):
             self._length = 196
             
         self.name               = name
-        self._path              = 'Dataset/skoda/'
+        self._path              = '../DynamicWHAR/Dataset/skoda/'
         self._channel_num       = 30
         self._user_num          = 1
         self._act_num           = 10

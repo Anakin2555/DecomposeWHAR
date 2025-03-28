@@ -35,6 +35,8 @@ class DecomposeWHAR(nn.Module):
                  num_classes=17):  # Number of classes for classification
         super(DecomposeWHAR, self).__init__()
         self.num_layers = num_layers
+        self.num_a_layers = num_a_layers
+        self.num_m_layers = num_m_layers
         T = L // S  # Calculate the number of patches after embedding
         self.T = T
         self.D = D
@@ -56,7 +58,10 @@ class DecomposeWHAR(nn.Module):
         self.d_layers = 1  # Number of attention layers
 
         # Mamba Block of Global Temporal Aggregation (GTA)
-        self.mamba_preprocess = Mamba_Layer(Mamba(d_model=d_model_mamba, d_state=d_state, d_conv=d_conv), d_model_mamba)
+        self.mamba_preprocess = nn.ModuleList([
+            Mamba_Layer(Mamba(d_model=d_model_mamba, d_state=d_state, d_conv=d_conv), d_model_mamba)
+            for _ in range(num_m_layers)
+        ])
 
         # Attention layers of Cross-Sensor Interaction (CSI)
         self.AM_layers = nn.ModuleList(
@@ -71,54 +76,62 @@ class DecomposeWHAR(nn.Module):
                 for i in range(self.d_layers)
             ]
         )
+        self.register_buffer(
+            "centers", (torch.randn(num_classes, num_sensor*D * T).cuda())
+        )
 
     def forward(self, inputs):  # inputs: (B, N, L, M) - Batch size, Number of sensors, Sequence length, Number of variables
-        B, L, M = inputs.shape[0] * inputs.shape[1], inputs.shape[2], inputs.shape[3]
+        
+        B, N, L, M = inputs.shape[0],inputs.shape[1],inputs.shape[2],inputs.shape[3] # 64,5,24,9
+        x = inputs.reshape(B*N, L, M)  # (B*N, L, M)
+        x = x.permute(0, 2, 1)  # (B*N, M, L)
 
-        # Reshape input from (B, N, L, M) to (B, L, M) for embedding
-        x = inputs.reshape(B, L, M)  # (B, L, M)
-        x = x.permute(0, 2, 1)  # (B, M, L)
 
-        # Embedding layer (Modality-Specific Embedding (MSE))
-        x_emb = self.embed_layer(x)  # [B, M, L] -> [B, M, D, T]
+        x_emb = self.embed_layer(x)  # [B*N, M, L] -> [B*N, M, D, T]
 
-        # Apply decomposition convolutional blocks
         for i in range(self.num_layers):
-            x_emb = self.backbone[i](x_emb)  # [B, M, D, T]
+            x_emb = self.backbone[i](x_emb)  # [B*N, M, D, L] -> [B*N, M, D, T]
 
-        # Flatten the embedded representation for further processing
-        x_emb = rearrange(x_emb, 'b m d n -> b m (d n)', b=B, m=M)  # [B, M, D*T]
+        # Flatten
+        x_emb = rearrange(x_emb, 'b m d t -> b m (d t)', b=B*N, m=M)  # [B*N, M, D, T] -> [B*N, M, D*T]
 
-        # Aggregate over the sensor dimension by taking the mean
-        x_emb = x_emb.mean(dim=1)  # [B, M, D*T] -> [B, D*T]
+        # Aggregate over the sensor dimension and apply classification head
+        x_emb = x_emb.mean(dim=1)  # [B*N, M, D*T] -> [B*N, D*T] 64*5,D*T
+        x_emb = x_emb.reshape(inputs.shape[0],inputs.shape[1],-1) # B,N,D*T (64,5,D*T)
 
-        # Reshape the output to (B, N, D*T)
-        x_emb = x_emb.reshape(inputs.shape[0], inputs.shape[1], -1)  # B, N, D*T
 
-        # Reshape and permute to prepare for Mamba Block
-        x_emb = x_emb.reshape(inputs.shape[0], inputs.shape[1], self.D, self.T)
-        x_emb = x_emb.permute(0, 3, 1, 2)  # B, T, N, D
-        x_emb = x_emb.reshape(inputs.shape[0], x_emb.shape[1], -1)  # B, T, N*D
 
-        # Apply Mamba Block for Global Temporal Aggregation (GTA)
-        x_emb = self.mamba_preprocess(x_emb)  # B, T, N*D
+        # Reshape to B,T,N*D (64, T, 5*D)
+        x_emb = x_emb.reshape(inputs.shape[0],inputs.shape[1],self.D,self.T) # B,N,D,T (64,5,D,T)
+        x_emb = x_emb.permute(0,3,1,2)
+        x_emb = x_emb.reshape(inputs.shape[0],x_emb.shape[1],-1) # B,T,N*D (64,T,5*D)
 
-        # Reshape and permute back to (B, N, D*T)
-        x_emb = x_emb.reshape(inputs.shape[0], x_emb.shape[1], inputs.shape[1], self.D)  # B, T, N, D
-        x_emb = x_emb.permute(0, 2, 3, 1)  # B, N, D, T
-        x_emb = x_emb.reshape(inputs.shape[0], x_emb.shape[1], -1)  # B, N, D*T
 
-        # Apply Self-Attention for Cross-Sensor Interaction (CSI)
-        for i in range(self.d_layers):
-            x_emb = self.AM_layers[i](x_emb, None)
+
+
+        # Mamba Input
+        for i in range(0,self.num_m_layers):
+            x_emb = self.mamba_preprocess[i](x_emb)  # B,T,N*D
+
+
+        # Reshape to B, N, D*T
+        x_emb = x_emb.reshape(inputs.shape[0], x_emb.shape[1], inputs.shape[1], self.D)  # B,T,N,D
+        x_emb = x_emb.permute(0, 2, 3, 1)  # B,N,D,T
+        x_emb = x_emb.reshape(inputs.shape[0], x_emb.shape[1], -1)  # B,N,D*T
+
+
+
+        # Attention
+        for i in range(self.num_a_layers):
+            x_emb, output_attention = self.AM_layers[i](x_emb, None)  # B,N,D*T
+
+
 
         x = x_emb
 
-        # Flatten and apply dropout
-        x = x.reshape(inputs.shape[0], -1)
-        x = F.dropout(x, p=self.dropout_prob, training=self.training)
+        x = x.reshape(inputs.shape[0],-1)
 
-        # Final fully connected layer for classification
+        x = F.dropout(x, p=self.dropout_prob, training=self.training)
         pred = self.fc_out(x)  # [B, D*T] -> [B, num_classes]
 
-        return x, pred  # Output: [B, num_classes]
+        return x,pred # output: [B, num_classes]
