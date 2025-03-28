@@ -8,11 +8,9 @@ import utils_this
 from models_layers.ts2vec import TS2Vec
 from utils.utils_centerloss import compute_center_loss
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-from thop import profile
-from dagma.linear import DagmaLinear
-from torch.utils.benchmark import timer
+
 from utils.utils_mixup import mixup_data, MixUpLoss
 import csv
 import datetime
@@ -21,7 +19,6 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.autograd import Variable
 from torch.optim import lr_scheduler
 import numpy as np
 from utils_this import *
@@ -166,7 +163,6 @@ elif args.dataset == "realdisp_40_20":
     args.patch_size = 20
     args.time_denpen_len = int(args.window_sample / args.patch_size)
 
-    # 原始学习率为0.0001
     args.lr = 0.001
 
     args.epochs = 60
@@ -483,7 +479,7 @@ def main(test_user):
             ### Save model ########
             if not os.path.exists(PATH_save_models):
                 os.makedirs(PATH_save_models)
-            # 只保存最好的模型
+
             model_save_path = os.path.join(PATH_save_models, f'{args.model}_teacher_{test_user}.pth')
             torch.save(model, model_save_path)
 
